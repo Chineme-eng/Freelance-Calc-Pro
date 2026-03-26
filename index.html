@@ -326,6 +326,8 @@
     .risk-grid,
     .scope-grid,
     .quote-grid,
+    .preset-grid,
+    .terms-grid,
     .projection-grid,
     .save-grid {
       display: grid;
@@ -337,7 +339,9 @@
     .budget-card,
     .risk-card,
     .scope-card,
-    .quote-card {
+    .quote-card,
+    .preset-card,
+    .term-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--r);
@@ -351,7 +355,9 @@
     .budget-card:hover,
     .risk-card:hover,
     .scope-card:hover,
-    .quote-card:hover {
+    .quote-card:hover,
+    .preset-card:hover,
+    .term-card:hover {
       border-color: var(--accent);
       box-shadow: var(--shadow);
       transform: translateY(-1px);
@@ -361,7 +367,9 @@
     .budget-card.active,
     .risk-card.active,
     .scope-card.active,
-    .quote-card.active {
+    .quote-card.active,
+    .preset-card.active,
+    .term-card.active {
       border-color: var(--accent);
       background: var(--accent-bg);
       box-shadow: var(--shadow2);
@@ -369,7 +377,9 @@
 
     .sc-icon,
     .bc-icon,
-    .qc-icon {
+    .qc-icon,
+    .pc-icon,
+    .tc-icon {
       font-size: 18px;
       margin-bottom: 6px;
       display: block;
@@ -379,7 +389,9 @@
     .bc-name,
     .rc-name,
     .soc-name,
-    .qc-name {
+    .qc-name,
+    .pc-name,
+    .tc-name {
       font-family: var(--mono);
       font-size: 12px;
       font-weight: 500;
@@ -391,7 +403,9 @@
     .bc-desc,
     .rc-desc,
     .soc-desc,
-    .qc-desc {
+    .qc-desc,
+    .pc-desc,
+    .tc-desc {
       font-size: 12px;
       color: var(--muted);
       font-family: var(--mono);
@@ -719,6 +733,28 @@
       border-radius: 999px;
     }
 
+    .playbook-note {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--bg2);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .invoice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media(max-width:560px){
+      .invoice-grid { grid-template-columns: 1fr; }
+    }
+
     .package-top,
     .scenario-top,
     .saved-top {
@@ -913,10 +949,10 @@
   <div class="wrap">
     <header class="hero">
       <div class="hero-eyebrow">Freelancers only · pro version</div>
-      <h1>The Freelance<br><em>Pricing</em> Calculator Pro</h1>
+      <h1>The Freelance<br><em>Pricing Engine</em> Pro</h1>
       <p class="hero-sub">
         Stop undercharging and price like a real professional. Model difficult clients, scope creep,
-        retainers, and income scenarios — then turn your numbers into a cleaner package and proposal.
+        retainers, rush jobs, deposits, and income scenarios — then turn your numbers into a cleaner package, invoice structure, and proposal.
       </p>
       <div class="hero-bar">
         <span class="hero-bar-label">Monthly income goal</span>
@@ -940,6 +976,14 @@
               <span class="panel-label">Freelance services</span>
             </div>
             <div class="service-grid" id="serviceGrid"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-hdr">
+              <span class="panel-label">Freelance pricing playbooks</span>
+            </div>
+            <div class="preset-grid" id="presetGrid"></div>
+            <div class="playbook-note" id="presetNote"></div>
           </div>
 
           <div class="panel">
@@ -979,6 +1023,16 @@
             <div class="quote-grid" id="quoteGrid"></div>
             <div class="small-note">
               This changes how aggressively you anchor the final quote. Use standard for most jobs, premium when the client cares more about outcomes than price.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-hdr">
+              <span class="panel-label">Deal terms</span>
+            </div>
+            <div class="terms-grid" id="termsGrid"></div>
+            <div class="small-note">
+              These terms change the actual commercial structure of the job. Rush timelines and admin-heavy projects should raise the quote, not just your stress.
             </div>
           </div>
 
@@ -1057,6 +1111,21 @@
               <div class="field">
                 <label for="retainerHours">Monthly retainer hours</label>
                 <input id="retainerHours" class="input mono" type="number" min="1" value="8" oninput="update()">
+              </div>
+
+              <div class="field">
+                <label for="rushFee">Rush fee %</label>
+                <input id="rushFee" class="input mono" type="number" min="0" max="100" value="0" oninput="update()">
+              </div>
+
+              <div class="field">
+                <label for="depositPercent">Deposit required %</label>
+                <input id="depositPercent" class="input mono" type="number" min="0" max="100" value="50" oninput="update()">
+              </div>
+
+              <div class="field">
+                <label for="adminHours">Admin + meeting hours</label>
+                <input id="adminHours" class="input mono" type="number" min="0" value="2" oninput="update()">
               </div>
 
               <div class="field">
@@ -1177,6 +1246,13 @@
 
           <div class="panel">
             <div class="panel-hdr">
+              <span class="panel-label">Invoice structure</span>
+            </div>
+            <div class="invoice-grid" id="invoiceGrid"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-hdr">
               <span class="panel-label">Budget fit</span>
             </div>
             <div id="budgetFitBox"></div>
@@ -1271,7 +1347,7 @@
     </section>
 
     <footer>
-      <div>Freelance Pricing Calculator Pro · Built to help freelancers stop undercharging.</div>
+      <div>Freelance Pricing Engine Pro · Built to help freelancers stop undercharging.</div>
       <div style="margin-top:.5rem">Use this to quote with more confidence and cleaner math.</div>
     </footer>
   </div>
@@ -1500,6 +1576,291 @@
       }
     ];
 
+    const PLAYBOOKS = [
+      {
+        id: 'brand-designer',
+        icon: '🪄',
+        name: 'Brand Designer',
+        desc: 'Identity work for stronger-value clients',
+        note: 'Good for logo systems, mini brand kits, and clients who want polish more than speed.',
+        service: 'graphic-design',
+        budget: 'growing-brand',
+        risk: 'normal',
+        scope: 'normal',
+        quote: 'premium',
+        incomeGoal: 6500,
+        monthlyExpenses: 350,
+        billableHours: 18,
+        weeksPerMonth: 4,
+        experience: '1.2',
+        clientType: '1.2',
+        taxBuffer: 27,
+        hoursPerProject: 14,
+        monthlyClients: 3,
+        revisionRisk: 12,
+        retainerHours: 8,
+        rushFee: 10,
+        depositPercent: 50,
+        adminHours: 2,
+        closeRate: 35
+      },
+      {
+        id: 'landing-page-dev',
+        icon: '🚀',
+        name: 'Landing Page Dev',
+        desc: 'One-page builds with clear commercial value',
+        note: 'Great for premium one-off builds where performance, polish, and speed matter.',
+        service: 'web-development',
+        budget: 'growing-brand',
+        risk: 'normal',
+        scope: 'normal',
+        quote: 'premium',
+        incomeGoal: 8000,
+        monthlyExpenses: 450,
+        billableHours: 22,
+        weeksPerMonth: 4,
+        experience: '1.2',
+        clientType: '1.2',
+        taxBuffer: 28,
+        hoursPerProject: 18,
+        monthlyClients: 3,
+        revisionRisk: 12,
+        retainerHours: 10,
+        rushFee: 15,
+        depositPercent: 50,
+        adminHours: 3,
+        closeRate: 32
+      },
+      {
+        id: 'shortform-editor',
+        icon: '🎞️',
+        name: 'Short-Form Editor',
+        desc: 'Batch editing for creators and brands',
+        note: 'Useful when turnaround speed matters and revisions can quietly pile up.',
+        service: 'video-editing',
+        budget: 'local-business',
+        risk: 'normal',
+        scope: 'messy',
+        quote: 'standard',
+        incomeGoal: 6000,
+        monthlyExpenses: 300,
+        billableHours: 24,
+        weeksPerMonth: 4,
+        experience: '1',
+        clientType: '1',
+        taxBuffer: 25,
+        hoursPerProject: 8,
+        monthlyClients: 6,
+        revisionRisk: 14,
+        retainerHours: 12,
+        rushFee: 20,
+        depositPercent: 40,
+        adminHours: 3,
+        closeRate: 40
+      },
+      {
+        id: 'conversion-copywriter',
+        icon: '📝',
+        name: 'Conversion Copywriter',
+        desc: 'Sales pages, emails, funnels',
+        note: 'Works best when the client cares about revenue impact and not just word count.',
+        service: 'copywriting',
+        budget: 'growing-brand',
+        risk: 'normal',
+        scope: 'normal',
+        quote: 'premium',
+        incomeGoal: 7000,
+        monthlyExpenses: 250,
+        billableHours: 20,
+        weeksPerMonth: 4,
+        experience: '1.2',
+        clientType: '1.2',
+        taxBuffer: 27,
+        hoursPerProject: 12,
+        monthlyClients: 4,
+        revisionRisk: 10,
+        retainerHours: 10,
+        rushFee: 10,
+        depositPercent: 50,
+        adminHours: 2,
+        closeRate: 30
+      },
+      {
+        id: 'social-manager',
+        icon: '📆',
+        name: 'Social Manager',
+        desc: 'Monthly support with recurring deliverables',
+        note: 'Best for turning recurring effort into stable retainers instead of random one-off work.',
+        service: 'social-media',
+        budget: 'local-business',
+        risk: 'normal',
+        scope: 'normal',
+        quote: 'standard',
+        incomeGoal: 5500,
+        monthlyExpenses: 280,
+        billableHours: 22,
+        weeksPerMonth: 4,
+        experience: '1',
+        clientType: '1',
+        taxBuffer: 24,
+        hoursPerProject: 10,
+        monthlyClients: 5,
+        revisionRisk: 12,
+        retainerHours: 16,
+        rushFee: 0,
+        depositPercent: 35,
+        adminHours: 4,
+        closeRate: 42
+      },
+      {
+        id: 'consultant-sprint',
+        icon: '🧭',
+        name: 'Consultant Sprint',
+        desc: 'High-value advice in shorter engagements',
+        note: 'Perfect when the value is clarity, direction, or decision speed rather than production volume.',
+        service: 'consulting',
+        budget: 'premium-brand',
+        risk: 'easy',
+        scope: 'tight',
+        quote: 'premium',
+        incomeGoal: 9000,
+        monthlyExpenses: 400,
+        billableHours: 16,
+        weeksPerMonth: 4,
+        experience: '1.4',
+        clientType: '1.4',
+        taxBuffer: 30,
+        hoursPerProject: 6,
+        monthlyClients: 4,
+        revisionRisk: 6,
+        retainerHours: 6,
+        rushFee: 0,
+        depositPercent: 60,
+        adminHours: 2,
+        closeRate: 28
+      },
+      {
+        id: 'ugc-script-pack',
+        icon: '🎤',
+        name: 'UGC Script Pack',
+        desc: 'Hooks and scripts sold in batches',
+        note: 'Great when you need a lower-ticket offer that still feels productized and clear.',
+        service: 'ugc-script',
+        budget: 'small-creator',
+        risk: 'normal',
+        scope: 'normal',
+        quote: 'standard',
+        incomeGoal: 4500,
+        monthlyExpenses: 200,
+        billableHours: 20,
+        weeksPerMonth: 4,
+        experience: '1',
+        clientType: '0.9',
+        taxBuffer: 22,
+        hoursPerProject: 6,
+        monthlyClients: 8,
+        revisionRisk: 8,
+        retainerHours: 8,
+        rushFee: 10,
+        depositPercent: 40,
+        adminHours: 1,
+        closeRate: 45
+      },
+      {
+        id: 'premium-web-build',
+        icon: '🏗️',
+        name: 'Premium Web Build',
+        desc: 'Higher-ticket custom site projects',
+        note: 'Designed for stronger budgets, heavier scope, and a more premium client experience.',
+        service: 'web-design',
+        budget: 'premium-brand',
+        risk: 'difficult',
+        scope: 'messy',
+        quote: 'premium',
+        incomeGoal: 10000,
+        monthlyExpenses: 500,
+        billableHours: 20,
+        weeksPerMonth: 4,
+        experience: '1.4',
+        clientType: '1.4',
+        taxBuffer: 30,
+        hoursPerProject: 24,
+        monthlyClients: 2,
+        revisionRisk: 18,
+        retainerHours: 12,
+        rushFee: 20,
+        depositPercent: 50,
+        adminHours: 4,
+        closeRate: 25
+      },
+      {
+        id: 'retainer-operator',
+        icon: '🔁',
+        name: 'Retainer Operator',
+        desc: 'Recurring monthly freelance system',
+        note: 'Best when you want fewer sales conversations and more predictable revenue.',
+        service: 'social-media',
+        budget: 'growing-brand',
+        risk: 'normal',
+        scope: 'normal',
+        quote: 'premium',
+        incomeGoal: 7500,
+        monthlyExpenses: 350,
+        billableHours: 24,
+        weeksPerMonth: 4,
+        experience: '1.2',
+        clientType: '1.2',
+        taxBuffer: 26,
+        hoursPerProject: 12,
+        monthlyClients: 4,
+        revisionRisk: 10,
+        retainerHours: 20,
+        rushFee: 0,
+        depositPercent: 35,
+        adminHours: 3,
+        closeRate: 38
+      }
+    ];
+
+    const DEAL_TERMS = [
+      {
+        id: 'standard',
+        icon: '📄',
+        name: 'Standard Terms',
+        desc: 'Normal pace, no rush fee',
+        rushFee: 0,
+        depositPercent: 50,
+        adminHours: 2
+      },
+      {
+        id: 'rush',
+        icon: '⚡',
+        name: 'Rush Timeline',
+        desc: 'Fast delivery deserves a bigger quote',
+        rushFee: 20,
+        depositPercent: 60,
+        adminHours: 3
+      },
+      {
+        id: 'admin-heavy',
+        icon: '🧾',
+        name: 'Admin Heavy',
+        desc: 'More calls, docs, and stakeholder overhead',
+        rushFee: 0,
+        depositPercent: 50,
+        adminHours: 5
+      },
+      {
+        id: 'premium-protection',
+        icon: '🔒',
+        name: 'Premium Protection',
+        desc: 'Stronger deposit for larger jobs',
+        rushFee: 10,
+        depositPercent: 70,
+        adminHours: 3
+      }
+    ];
+
     const RESULT_MODES = [
       { id: 'project', label: 'Project' },
       { id: 'hourly', label: 'Hourly' },
@@ -1509,6 +1870,8 @@
 
     let activeService = SERVICES[0];
     let activeBudgetPreset = BUDGET_PRESETS[1];
+    let activePlaybook = PLAYBOOKS[0];
+    let activeDealTerm = DEAL_TERMS[0];
     let activeMode = 'project';
     let activeClientRisk = CLIENT_RISKS[1];
     let activeScope = SCOPE_BUFFERS[1];
@@ -1523,6 +1886,32 @@
           <span class="sc-icon">${s.icon}</span>
           <div class="sc-name">${s.name}</div>
           <div class="sc-desc">${s.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderPlaybooks(){
+      const grid = document.getElementById('presetGrid');
+      grid.innerHTML = PLAYBOOKS.map(p => `
+        <div class="preset-card${p.id === activePlaybook.id ? ' active' : ''}" onclick="pickPlaybook('${p.id}')">
+          <span class="pc-icon">${p.icon}</span>
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-desc">${p.desc}</div>
+        </div>
+      `).join('');
+      const note = document.getElementById('presetNote');
+      if(note){
+        note.innerHTML = `<strong class="pro-accent">${activePlaybook.name}</strong><br>${activePlaybook.note}`;
+      }
+    }
+
+    function renderDealTerms(){
+      const grid = document.getElementById('termsGrid');
+      grid.innerHTML = DEAL_TERMS.map(t => `
+        <div class="term-card${t.id === activeDealTerm.id ? ' active' : ''}" onclick="pickDealTerm('${t.id}')">
+          <span class="tc-icon">${t.icon}</span>
+          <div class="tc-name">${t.name}</div>
+          <div class="tc-desc">${t.desc}</div>
         </div>
       `).join('');
     }
@@ -1612,6 +2001,58 @@
     function pickQuoteStyle(id){
       activeQuoteStyle = QUOTE_STYLES.find(q => q.id === id) || QUOTE_STYLES[1];
       renderQuoteGrid();
+      update();
+    }
+
+    function pickPlaybook(id){
+      const playbook = PLAYBOOKS.find(p => p.id === id) || PLAYBOOKS[0];
+      activePlaybook = playbook;
+
+      activeService = SERVICES.find(s => s.id === playbook.service) || SERVICES[0];
+      activeBudgetPreset = BUDGET_PRESETS.find(b => b.id === playbook.budget) || BUDGET_PRESETS[1];
+      activeClientRisk = CLIENT_RISKS.find(r => r.id === playbook.risk) || CLIENT_RISKS[1];
+      activeScope = SCOPE_BUFFERS.find(s => s.id === playbook.scope) || SCOPE_BUFFERS[1];
+      activeQuoteStyle = QUOTE_STYLES.find(q => q.id === playbook.quote) || QUOTE_STYLES[1];
+
+      document.getElementById('incomeGoal').value = Number(playbook.incomeGoal).toLocaleString();
+      document.getElementById('incomeGoalTop').value = Number(playbook.incomeGoal).toLocaleString();
+      document.getElementById('monthlyExpenses').value = Number(playbook.monthlyExpenses).toLocaleString();
+      document.getElementById('billableHours').value = playbook.billableHours;
+      document.getElementById('weeksPerMonth').value = playbook.weeksPerMonth;
+      document.getElementById('experience').value = playbook.experience;
+      document.getElementById('clientType').value = playbook.clientType;
+      document.getElementById('taxBuffer').value = playbook.taxBuffer;
+      document.getElementById('hoursPerProject').value = playbook.hoursPerProject;
+      document.getElementById('monthlyClients').value = playbook.monthlyClients;
+      document.getElementById('revisionRisk').value = playbook.revisionRisk;
+      document.getElementById('retainerHours').value = playbook.retainerHours;
+      document.getElementById('rushFee').value = playbook.rushFee;
+      document.getElementById('depositPercent').value = playbook.depositPercent;
+      document.getElementById('adminHours').value = playbook.adminHours;
+      document.getElementById('closeRate').value = playbook.closeRate;
+
+      activeDealTerm = DEAL_TERMS.find(t =>
+        t.rushFee === playbook.rushFee &&
+        t.depositPercent === playbook.depositPercent &&
+        t.adminHours === playbook.adminHours
+      ) || DEAL_TERMS[0];
+
+      renderServices();
+      renderBudgetPresets();
+      renderRiskGrid();
+      renderScopeGrid();
+      renderQuoteGrid();
+      renderPlaybooks();
+      renderDealTerms();
+      update();
+    }
+
+    function pickDealTerm(id){
+      activeDealTerm = DEAL_TERMS.find(t => t.id === id) || DEAL_TERMS[0];
+      document.getElementById('rushFee').value = activeDealTerm.rushFee;
+      document.getElementById('depositPercent').value = activeDealTerm.depositPercent;
+      document.getElementById('adminHours').value = activeDealTerm.adminHours;
+      renderDealTerms();
       update();
     }
 
@@ -1771,7 +2212,7 @@
           </div>
           <div class="saved-desc">
             ${item.client} · ${item.risk} · ${item.scope} · ${item.style}<br>
-            ${item.hourly} / hr · ${item.retainer} retainer
+            ${item.hourly} / hr · ${item.retainer} retainer · ${item.deposit || '$0'} deposit
           </div>
           <div class="saved-actions">
             <button class="copy-btn" onclick="copySavedLine('${escapeQuotes(item.copyLine)}', this)">Copy line</button>
@@ -1803,20 +2244,27 @@
       document.getElementById('monthlyClients').value = '4';
       document.getElementById('revisionRisk').value = '10';
       document.getElementById('retainerHours').value = '8';
+      document.getElementById('rushFee').value = '0';
+      document.getElementById('depositPercent').value = '50';
+      document.getElementById('adminHours').value = '2';
       document.getElementById('closeRate').value = '35';
 
       activeService = SERVICES[0];
       activeBudgetPreset = BUDGET_PRESETS[1];
+      activePlaybook = PLAYBOOKS[0];
+      activeDealTerm = DEAL_TERMS[0];
       activeMode = 'project';
       activeClientRisk = CLIENT_RISKS[1];
       activeScope = SCOPE_BUFFERS[1];
       activeQuoteStyle = QUOTE_STYLES[1];
 
       renderServices();
+      renderPlaybooks();
       renderBudgetPresets();
       renderRiskGrid();
       renderScopeGrid();
       renderQuoteGrid();
+      renderDealTerms();
       renderModes();
       update();
     }
@@ -1833,9 +2281,13 @@
       const monthlyClients = +document.getElementById('monthlyClients').value || 1;
       const revisionRisk = (+document.getElementById('revisionRisk').value || 0) / 100;
       const retainerHours = +document.getElementById('retainerHours').value || 1;
+      const rushFee = (+document.getElementById('rushFee').value || 0) / 100;
+      const depositPercent = (+document.getElementById('depositPercent').value || 0) / 100;
+      const adminHours = +document.getElementById('adminHours').value || 0;
       const closeRate = (+document.getElementById('closeRate').value || 1) / 100;
 
       const monthlyHours = billableHours * weeksPerMonth;
+      const trueProjectHours = hoursPerProject + adminHours;
       const baseNeed = incomeGoal + monthlyExpenses;
       const protectedRevenue = baseNeed / Math.max(0.1, 1 - taxBuffer);
 
@@ -1851,20 +2303,24 @@
       const positionedHourly = marketRevenue / Math.max(1, monthlyHours);
       const recommendedHourly = quoteReadyRevenue / Math.max(1, monthlyHours);
 
-      const baseProject = recommendedHourly * hoursPerProject;
-      const recommendedProject = baseProject;
+      const baseProject = recommendedHourly * trueProjectHours;
+      const rushAdjustedProject = baseProject * (1 + rushFee);
+      const recommendedProject = rushAdjustedProject;
       const safetyProject = recommendedProject * 0.92;
       const premiumProject = recommendedProject * 1.18;
 
       const starterPackage = recommendedProject * 0.82;
       const standardPackage = recommendedProject * 1.00;
       const premiumPackage = recommendedProject * 1.34;
+      const depositAmount = recommendedProject * depositPercent;
+      const finalPayment = recommendedProject - depositAmount;
+      const splitPayment = recommendedProject / 3;
 
       const retainerBase = recommendedHourly * retainerHours;
       const retainerEquivalent = retainerBase * 0.94;
       const dayRate = recommendedHourly * 6;
 
-      const maxProjectsByTime = Math.max(1, Math.floor(monthlyHours / Math.max(1, hoursPerProject)));
+      const maxProjectsByTime = Math.max(1, Math.floor(monthlyHours / Math.max(1, trueProjectHours)));
       const monthlyRevenueAtRecommended = recommendedProject * monthlyClients;
       const monthlyRevenueAtCapacity = recommendedProject * maxProjectsByTime;
       const annualRevenueAtTarget = monthlyRevenueAtRecommended * 12;
@@ -1886,7 +2342,7 @@
 
       const healthPricing = Math.min(100, Math.max(10, Math.round((recommendedHourly / Math.max(1, minimumHourly)) * 34)));
       const healthClient = Math.min(100, Math.round(clientType * 25 + (activeQuoteStyle.multiplier * 20)));
-      const healthProtection = Math.min(100, Math.round((taxBuffer * 100) + (revisionRisk * 80) + activeScope.extraPercent + ((activeClientRisk.multiplier - 1) * 80)));
+      const healthProtection = Math.min(100, Math.round((taxBuffer * 100) + (revisionRisk * 80) + activeScope.extraPercent + ((activeClientRisk.multiplier - 1) * 80) + (depositPercent * 25) + (rushFee * 20)));
       const healthCapacity = Math.min(100, Math.max(10, Math.round((monthlyHours / Math.max(1, requiredProjectsToGoal * hoursPerProject)) * 42)));
 
       const confidenceScore = Math.min(100, Math.round((healthPricing + healthClient + healthProtection + healthCapacity) / 4));
@@ -1894,7 +2350,7 @@
 
       let resultLabel = 'Recommended project price';
       let resultValue = fmtMoney(recommendedProject);
-      let resultSub = `${activeService.name} · ${activeBudgetPreset.name} · ${fmtMoney(recommendedHourly)}/hr`;
+      let resultSub = `${activeService.name} · ${activeBudgetPreset.name} · ${fmtMoney(recommendedHourly)}/hr · ${fmtPct(depositPercent * 100)} deposit`;
 
       if(activeMode === 'hourly'){
         resultLabel = 'Recommended hourly rate';
@@ -1903,11 +2359,11 @@
       } else if(activeMode === 'retainer'){
         resultLabel = 'Suggested monthly retainer';
         resultValue = fmtMoney(retainerEquivalent);
-        resultSub = `${retainerHours} hours / month · ${activeClientRisk.name.toLowerCase()} · ${activeQuoteStyle.name.toLowerCase()}`;
+        resultSub = `${retainerHours} hours / month · ${activeClientRisk.name.toLowerCase()} · ${activeQuoteStyle.name.toLowerCase()} · ${fmtPct(depositPercent * 100)} upfront`;
       } else if(activeMode === 'packages'){
         resultLabel = 'Recommended package tier';
         resultValue = fmtMoney(standardPackage);
-        resultSub = `Starter ${fmtMoney(starterPackage)} · Standard ${fmtMoney(standardPackage)} · Premium ${fmtMoney(premiumPackage)}`;
+        resultSub = `Starter ${fmtMoney(starterPackage)} · Standard ${fmtMoney(standardPackage)} · Premium ${fmtMoney(premiumPackage)} · ${fmtPct(depositPercent * 100)} deposit`;
       }
 
       document.getElementById('resultLabel').textContent = resultLabel;
@@ -1938,6 +2394,9 @@
         ['Base monthly need', fmtMoney(baseNeed)],
         ['Tax + safety buffer', fmtPct(taxBuffer * 100)],
         ['Revision / hassle buffer', fmtPct(revisionRisk * 100)],
+        ['Rush fee', fmtPct(rushFee * 100)],
+        ['Deposit required', fmtPct(depositPercent * 100)],
+        ['Admin + meeting hours', adminHours + ' hrs'],
         ['Scope creep add-on', fmtPct(activeScope.extraPercent)],
         ['Working hours per month', monthlyHours + ' hrs'],
         ['Minimum hourly floor', fmtMoney(minimumHourly)],
@@ -1945,7 +2404,9 @@
         ['Positioned hourly', fmtMoney(positionedHourly)],
         ['Recommended hourly', fmtMoney(recommendedHourly)],
         ['Project hours used', hoursPerProject + ' hrs'],
+        ['True project hours', trueProjectHours + ' hrs'],
         ['Recommended project price', fmtMoney(recommendedProject)],
+        ['Deposit invoice', fmtMoney(depositAmount)],
         ['Suggested monthly retainer', fmtMoney(retainerEquivalent)],
         ['Suggested day rate', fmtMoney(dayRate)]
       ].map(row => `
@@ -2255,7 +2716,30 @@
 
       document.getElementById('retainerBox').innerHTML = `
         A strong monthly retainer for this setup starts around <strong>${fmtMoney(retainerEquivalent)}</strong> for roughly
-        <strong>${retainerHours} hours / month</strong>. That gives you recurring revenue without having to resell the same project every single time.
+        <strong>${retainerHours} hours / month</strong>. That gives you recurring revenue without having to resell the same project every single time, while still protecting admin time and your commercial structure.
+      `;
+
+      document.getElementById('invoiceGrid').innerHTML = `
+        <div class="mini-card">
+          <div class="mini-k">Deposit invoice</div>
+          <div class="mini-v">${fmtMoney(depositAmount)}</div>
+          <div class="stat-s">${Math.round(depositPercent * 100)}% due upfront</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-k">Final payment</div>
+          <div class="mini-v">${fmtMoney(finalPayment)}</div>
+          <div class="stat-s">remaining balance</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-k">3-part payment plan</div>
+          <div class="mini-v">${fmtMoney(splitPayment)}</div>
+          <div class="stat-s">per milestone if split equally</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-k">Rush-adjusted quote</div>
+          <div class="mini-v">${fmtMoney(recommendedProject)}</div>
+          <div class="stat-s">${rushFee > 0 ? Math.round(rushFee * 100) + '% rush uplift applied' : 'no rush uplift applied'}</div>
+        </div>
       `;
 
       let budgetFitText = '';
@@ -2316,6 +2800,8 @@ Recommended hourly: ${fmtMoney(recommendedHourly)}
 Recommended project: ${fmtMoney(recommendedProject)}
 Retainer suggestion: ${fmtMoney(retainerEquivalent)}
 Day rate: ${fmtMoney(dayRate)}
+Deposit invoice: ${fmtMoney(depositAmount)}
+Rush fee: ${fmtPct(rushFee * 100)}
 
 Monthly target revenue: ${fmtMoney(monthlyRevenueAtRecommended)}
 Annualized value: ${fmtMoney(annualRevenueAtTarget)}
@@ -2333,15 +2819,21 @@ Premium: ${fmtMoney(premiumPackage)}
 For this project, my recommended option would be ${fmtMoney(standardPackage)}.
 
 That number reflects:
-• the estimated time involved
+• the estimated production time involved
 • the creative / technical depth of the work
-• revision and communication overhead
-• the current project scope
+• revision, communication, and admin overhead
+• the current project scope and timeline
 • and the level of polish needed for a strong result
+
+Commercial structure:
+• deposit to start: ${fmtMoney(depositAmount)}
+• final payment: ${fmtMoney(finalPayment)}
+• rush fee applied: ${rushFee > 0 ? fmtPct(rushFee * 100) : 'No'}
 
 If you prefer, I can also structure this as:
 • a one-time project at ${fmtMoney(recommendedProject)}
 • a day rate at ${fmtMoney(dayRate)}
+• a 3-part milestone plan at ${fmtMoney(splitPayment)} each
 • or a monthly retainer starting at ${fmtMoney(retainerEquivalent)}
 
 If you want the scope adjusted, I can tailor the package to fit your priorities while keeping the outcome strong.`;
@@ -2355,15 +2847,18 @@ If you want the scope adjusted, I can tailor the package to fit your priorities 
         hourly: fmtMoney(recommendedHourly),
         project: fmtMoney(recommendedProject),
         retainer: fmtMoney(retainerEquivalent),
-        copyLine: `${activeService.name} — ${fmtMoney(recommendedProject)} project · ${fmtMoney(recommendedHourly)}/hr · ${activeClientRisk.name} · ${activeScope.name}`
+        deposit: fmtMoney(depositAmount),
+        copyLine: `${activeService.name} — ${fmtMoney(recommendedProject)} project · ${fmtMoney(recommendedHourly)}/hr · ${Math.round(depositPercent * 100)}% deposit · ${activeClientRisk.name} · ${activeScope.name}`
       };
     }
 
     renderServices();
+    renderPlaybooks();
     renderBudgetPresets();
     renderRiskGrid();
     renderScopeGrid();
     renderQuoteGrid();
+    renderDealTerms();
     renderModes();
     renderSavedScenarios();
     update();
