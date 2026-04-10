@@ -31,9 +31,9 @@
     html{scroll-behavior:smooth}
    body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:16px;line-height:1.7;min-height:100vh;transition:background .3s,color .3s; padding-top: 60px;}
 
-/* ── NAV (STAGNANT / SCROLLS WITH PAGE) ── */
+/* ── NAV (STAGNANT - SCROLLS AWAY) ── */
 nav {
-    position: relative; /* This makes it act like normal page content */
+    position: relative; /* Normal flow, scrolls with page */
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
@@ -43,31 +43,34 @@ nav {
     min-height: 52px;
 }
 
-/* Make sure you delete the 'body { padding-top: 52px; }' if you added it! */
-
 .nav-brand {
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: .06em;
     color: var(--muted);
     text-decoration: none;
-    padding: .8rem 0;
+    flex: 1; /* Pushes the pill to the exact center */
 }
 
 .nav-brand span { color: var(--accent); }
 
-/* ── BASE STATE (Sitting flat inside the stagnant header) ── */
+.nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .75rem;
+    flex: 1; /* Matches nav-brand to keep pill perfectly centered */
+}
+
+/* ── BASE STATE (Sitting perfectly flat in the header) ── */
 .nav-tabs {
-    position: absolute; /* Anchors it to the top of the webpage document */
-    top: 6px; 
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative; /* Sits naturally in the header flexbox */
     display: flex;
     gap: 4px;
-    padding: 4px;
+    padding: 0;
     background: transparent;
-    border-radius: 8px;
-    border: 1px solid transparent;
+    border-radius: 0;
+    border: none;
     box-shadow: none;
     z-index: 300;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -79,7 +82,7 @@ nav {
     letter-spacing: .06em;
     padding: 6px 12px;
     border-radius: 6px;
-    border: none;
+    border: 1px solid transparent;
     background: transparent;
     color: var(--muted);
     cursor: pointer;
@@ -89,10 +92,12 @@ nav {
 .nav-tab:hover { color: var(--accent); background: var(--bg2); }
 .nav-tab.active { background: var(--accent-bg); color: var(--accent) !important; }
 
-/* ── FLOATING STATE (Detaches when you scroll) ── */
+/* ── FLOATING STATE (Detaches when scrolled) ── */
 .nav-tabs.floating {
-    position: fixed; /* THIS is what makes it follow you */
-    top: 20px; /* Floats nicely near the top of the screen */
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     background: var(--surface);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -106,7 +111,6 @@ nav {
 [data-theme="light"] .nav-tabs.floating { background: rgba(255, 255, 255, 0.85); }
 [data-theme="dark"] .nav-tabs.floating { background: rgba(36, 31, 25, 0.85); }
 
-/* Tabs get bigger and rounder in the floating state */
 .nav-tabs.floating .nav-tab {
     padding: 10px 20px;
     border-radius: 999px;
@@ -119,13 +123,7 @@ nav {
     box-shadow: 0 4px 12px rgba(184, 92, 42, 0.2);
 }
 
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    padding: .5rem 0;
-}
-
+/* Buttons inside right-nav */
 .theme-btn, .mini-btn, .copy-btn, .mode-btn, .save-chip {
     font-family: var(--mono);
     font-size: 11px;
@@ -157,7 +155,7 @@ nav {
 
 /* Mobile Fix */
 @media (max-width: 700px) {
-    .nav-tabs { width: 90%; overflow-x: auto; justify-content: flex-start; }
+    .nav-tabs.floating { width: 90%; overflow-x: auto; justify-content: flex-start; }
 }
     /* ── PAGE SYSTEM ── */
     .page{display:none}.page.active{display:block}
@@ -433,7 +431,15 @@ nav {
 <nav id="mainNav">
   <a class="nav-brand" href="#" onclick="return false;"><span>Kat</span>Tools Pro</a>
   
-  <div style="flex: 1;"></div> 
+  <div class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" onclick="showPage('calculator')">Calculator</button>
+    <button class="nav-tab" onclick="showPage('packages')">Packages</button>
+    <button class="nav-tab" onclick="showPage('proposal')">Proposal</button>
+    <button class="nav-tab" onclick="showPage('compare')">Compare</button>
+    <button class="nav-tab" onclick="showPage('tools')">Tools</button>
+    <button class="nav-tab" onclick="showPage('charts')">Charts</button>
+    <button class="nav-tab" onclick="showPage('saved')">Saved</button>
+  </div>
 
   <div class="nav-right">
     <button class="theme-btn" onclick="saveScenario(this)">Save Quote</button>
@@ -441,16 +447,6 @@ nav {
     <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">Dark mode</button>
   </div>
 </nav>
-
-<div class="nav-tabs" id="navTabs">
-  <button class="nav-tab active" onclick="showPage('calculator')">Calculator</button>
-  <button class="nav-tab" onclick="showPage('packages')">Packages</button>
-  <button class="nav-tab" onclick="showPage('proposal')">Proposal</button>
-  <button class="nav-tab" onclick="showPage('compare')">Compare</button>
-  <button class="nav-tab" onclick="showPage('tools')">Tools</button>
-  <button class="nav-tab" onclick="showPage('charts')">Charts</button>
-  <button class="nav-tab" onclick="showPage('saved')">Saved</button>
-</div>
   
 <!-- ══════════════════════════════════════ CALCULATOR PAGE -->
 <div class="page active" id="page-calculator">
