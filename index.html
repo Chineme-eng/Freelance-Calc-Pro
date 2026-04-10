@@ -64,7 +64,7 @@ nav {
 
 /* ── BASE STATE (Sitting perfectly flat in the header) ── */
 .nav-tabs {
-    position: relative; /* Sits naturally in the header flexbox */
+    position: relative; 
     display: flex;
     gap: 4px;
     padding: 0;
@@ -73,7 +73,7 @@ nav {
     border: none;
     box-shadow: none;
     z-index: 300;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease; /* Simplified transition */
 }
 
 .nav-tab {
@@ -86,9 +86,10 @@ nav {
     background: transparent;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease; /* Simplified transition */
 }
 
+/* Removed the 'lift' transform on hover */
 .nav-tab:hover { color: var(--accent); background: var(--bg2); }
 .nav-tab.active { background: var(--accent-bg); color: var(--accent) !important; }
 
@@ -116,13 +117,40 @@ nav {
     border-radius: 999px;
 }
 
+/* Removed the scale/lift effect, kept it flat and simple */
 .nav-tabs.floating .nav-tab.active {
     background: var(--accent) !important;
     color: #fff !important;
-    transform: translateY(-1px) scale(1.02);
     box-shadow: 0 4px 12px rgba(184, 92, 42, 0.2);
 }
 
+/* ── NEW: FLOATING DARK MODE BUTTON ── */
+.floating-theme-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 10px 16px;
+    border-radius: 999px; /* Matches the pill style */
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: var(--shadow2);
+    transition: all 0.2s ease;
+}
+
+.floating-theme-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Hide floating button when printing */
+@media print {
+    .floating-theme-btn { display: none !important; }
+}
 /* Buttons inside right-nav */
 .theme-btn, .mini-btn, .copy-btn, .mode-btn, .save-chip {
     font-family: var(--mono);
@@ -444,9 +472,10 @@ nav {
   <div class="nav-right">
     <button class="theme-btn" onclick="saveScenario(this)">Save Quote</button>
     <button class="theme-btn" onclick="window.print()">Print</button>
-    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">Dark mode</button>
-  </div>
+    </div>
 </nav>
+
+<button class="floating-theme-btn" onclick="toggleTheme()" id="themeBtn">Dark mode</button>
   
 <!-- ══════════════════════════════════════ CALCULATOR PAGE -->
 <div class="page active" id="page-calculator">
