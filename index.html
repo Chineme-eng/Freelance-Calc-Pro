@@ -29,18 +29,28 @@
       --shadow:0 1px 4px rgba(0,0,0,.3); --shadow2:0 2px 12px rgba(0,0,0,.4);
     }
     html{scroll-behavior:smooth}
-   body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:16px;line-height:1.7;min-height:100vh;transition:background .3s,color .3s; padding-top: 60px;}
+ body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+    transition: background .3s, color .3s;
+    /* padding-top removed from here! */
+}
 
 /* ── NAV (STAGNANT - SCROLLS AWAY) ── */
+/* ── NAV (STAGNANT - SCROLLS AWAY) ── */
 nav {
-    position: relative; /* Normal flow, scrolls with page */
+    position: relative; 
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 52px;
+    min-height: 44px; /* Reduced from 52px to slim the header down */
 }
 
 .nav-brand {
