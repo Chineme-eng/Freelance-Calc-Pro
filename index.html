@@ -32,18 +32,127 @@
     body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:16px;line-height:1.7;min-height:100vh;transition:background .3s,color .3s}
 
     /* ── NAV ── */
-    nav{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;min-height:52px;backdrop-filter:blur(8px);gap:1rem;flex-wrap:wrap}
-    .nav-brand{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-decoration:none;padding:.8rem 0}
-    .nav-brand span{color:var(--accent)}
-    .nav-tabs{display:flex;gap:4px;flex-wrap:wrap}
-    .nav-tab{font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:5px 12px;border-radius:6px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
-    .nav-tab:hover{color:var(--accent)}
-    .nav-tab.active{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
-    .nav-right{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;padding:.5rem 0}
-    .theme-btn,.mini-btn,.copy-btn,.mode-btn,.save-chip{font-family:var(--mono);font-size:11px;padding:6px 10px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
-    .theme-btn:hover,.mini-btn:hover,.copy-btn:hover,.mode-btn:hover,.save-chip:hover{border-color:var(--accent);color:var(--accent)}
-    .copy-btn.copied,.save-chip.saved{background:var(--green-bg);color:var(--green);border-color:var(--green)}
-    .mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    backdrop-filter: blur(8px);
+}
+
+.nav-brand {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .06em;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .8rem 0;
+}
+
+.nav-brand span { color: var(--accent); }
+
+/* The Floating Pill Container */
+.nav-tabs {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border2);
+    box-shadow: var(--shadow2);
+    z-index: 300;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme-specific pill transparency */
+[data-theme="light"] .nav-tabs { background: rgba(255, 255, 255, 0.8); }
+[data-theme="dark"] .nav-tabs { background: rgba(36, 31, 25, 0.8); }
+
+/* Individual Pill Tabs */
+.nav-tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .06em;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-tab:hover {
+    color: var(--accent);
+    background: var(--bg2);
+    transform: translateY(-2px);
+}
+
+.nav-tab.active {
+    background: var(--accent) !important;
+    color: #fff !important;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(184, 92, 42, 0.2);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .5rem 0;
+}
+
+.theme-btn, .mini-btn, .copy-btn, .mode-btn, .save-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.theme-btn:hover, .mini-btn:hover, .copy-btn:hover, .mode-btn:hover, .save-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.copy-btn.copied, .save-chip.saved {
+    background: var(--green-bg);
+    color: var(--green);
+    border-color: var(--green);
+}
+
+.mode-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+/* Mobile Fix for Floating Pill */
+@media (max-width: 700px) {
+    .nav-tabs {
+        bottom: 1.5rem;
+        width: 90%;
+        overflow-x: auto;
+        padding: 6px;
+    }
+    .nav-tab { padding: 8px 14px; }
+}
 
     /* ── PAGE SYSTEM ── */
     .page{display:none}.page.active{display:block}
@@ -318,6 +427,7 @@
 
 <nav>
   <a class="nav-brand" href="#" onclick="return false;"><span>Kat</span>Tools Pro</a>
+  
   <div class="nav-tabs" id="navTabs">
     <button class="nav-tab active" onclick="showPage('calculator')">Calculator</button>
     <button class="nav-tab" onclick="showPage('packages')">Packages</button>
@@ -327,6 +437,7 @@
     <button class="nav-tab" onclick="showPage('charts')">Charts</button>
     <button class="nav-tab" onclick="showPage('saved')">Saved</button>
   </div>
+
   <div class="nav-right">
     <button class="theme-btn" onclick="saveScenario(this)">Save Quote</button>
     <button class="theme-btn" onclick="window.print()">Print</button>
