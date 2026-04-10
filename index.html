@@ -31,13 +31,9 @@
     html{scroll-behavior:smooth}
    body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:16px;line-height:1.7;min-height:100vh;transition:background .3s,color .3s; padding-top: 60px;}
 
-/* ── NAV (LOCKED TO TOP) ── */
+/* ── NAV (STAGNANT / SCROLLS WITH PAGE) ── */
 nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 200;
+    position: relative; /* This makes it act like normal page content */
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
@@ -45,11 +41,9 @@ nav {
     align-items: center;
     justify-content: space-between;
     min-height: 52px;
-    backdrop-filter: blur(8px);
 }
 
-/* Provide space under the fixed header */
-body { padding-top: 52px; }
+/* Make sure you delete the 'body { padding-top: 52px; }' if you added it! */
 
 .nav-brand {
     font-family: var(--mono);
@@ -62,10 +56,10 @@ body { padding-top: 52px; }
 
 .nav-brand span { color: var(--accent); }
 
-/* ── BASE STATE (Sitting flat inside the header) ── */
+/* ── BASE STATE (Sitting flat inside the stagnant header) ── */
 .nav-tabs {
-    position: fixed;
-    top: 6px; /* Centered vertically in the 52px header */
+    position: absolute; /* Anchors it to the top of the webpage document */
+    top: 6px; 
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -95,14 +89,15 @@ body { padding-top: 52px; }
 .nav-tab:hover { color: var(--accent); background: var(--bg2); }
 .nav-tab.active { background: var(--accent-bg); color: var(--accent) !important; }
 
-/* ── FLOATING STATE (Detached & Scrolled) ── */
+/* ── FLOATING STATE (Detaches when you scroll) ── */
 .nav-tabs.floating {
-    top: 70px; /* Drops down below the header */
+    position: fixed; /* THIS is what makes it follow you */
+    top: 20px; /* Floats nicely near the top of the screen */
     background: var(--surface);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     padding: 8px;
-    border-radius: 999px; /* Transforms into a pill */
+    border-radius: 999px; /* Turns into a pill */
     border: 1px solid var(--border2);
     box-shadow: var(--shadow2);
     gap: 6px;
