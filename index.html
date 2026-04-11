@@ -327,7 +327,19 @@ nav {
     .package-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);position:relative;transition:all .2s}
     .package-card:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
     .package-card.recommended{border-color:var(--accent);background:var(--accent-bg);box-shadow:var(--shadow2)}
-    .recommended-badge{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--accent);padding:3px 8px;border-radius:999px}
+  .recommended-badge {
+    position: absolute;
+    bottom: 16px; /* Moved to the bottom */
+    right: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    padding: 4px 9px;
+    border-radius: 999px;
+}
     .package-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
     .package-name{font-family:var(--serif);font-size:18px}
     .package-price{font-family:var(--mono);font-size:18px;color:var(--accent)}
